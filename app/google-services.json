@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "421936037457",
+    "project_id": "cyber-project-database",
+    "storage_bucket": "cyber-project-database.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421936037457:android:348106c5782bc426090270",
+        "android_client_info": {
+          "package_name": "com.project.dineagement"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJocg9EOoAjYGkipY_BMS_eQSt8bU0fCs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
