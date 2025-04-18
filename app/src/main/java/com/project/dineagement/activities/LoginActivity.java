@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                 login();
             }
         };
-        spannableString.setSpan(span, 24, 38, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(span, 0, 39, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tVLogReg.setText(spannableString);
         tVLogReg.setMovementMethod(LinkMovementMethod.getInstance());
     }
@@ -117,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
                 register();
             }
         };
-        spannableString.setSpan(span, 26, 37, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(span, 0, 39, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tVLogReg.setText(spannableString);
         tVLogReg.setMovementMethod(LinkMovementMethod.getInstance());
     }

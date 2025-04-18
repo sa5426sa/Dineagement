@@ -1,5 +1,6 @@
 package com.project.dineagement.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -29,5 +30,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addTask(View view) {
+        Intent createTask = new Intent(this, CreateTaskActivity.class);
+        startActivity(createTask);
     }
 }
