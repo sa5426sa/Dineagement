@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,16 +36,15 @@ import com.project.dineagement.R;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText eTName, eTEmail, eTPass;
-    CheckBox rememberUser;
-    Button btn;
-    TextView tVLogReg;
+    private EditText eTName, eTEmail, eTPass;
+    private CheckBox rememberUser;
+    private Button btn;
+    private TextView tVLogReg, loginTitle;
 
-    boolean stayConnected, isRegistered;
-    SharedPreferences settings;
-    String name, email, password, uid;
-    int REQUEST_CODE = 100;
-    User userDB;
+    private boolean stayConnected, isRegistered;
+    private SharedPreferences settings;
+    private String name, uid;
+    private User userDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,8 @@ public class LoginActivity extends AppCompatActivity {
         register();
     }
 
-    public void initViews() {
+    private void initViews() {
+        loginTitle = findViewById(R.id.loginTitle);
         eTName = findViewById(R.id.eTName);
         eTEmail = findViewById(R.id.eTEmail);
         eTPass = findViewById(R.id.eTPass);
@@ -73,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         boolean isChecked = settings.getBoolean("stayConnected", false);
         Intent main = new Intent(LoginActivity.this, MainActivity.class);
         if (refAuth.getCurrentUser() != null && isChecked) {
-            refAuth.getCurrentUser();
+            FBRef.getUser(refAuth.getCurrentUser());
             stayConnected = true;
             main.putExtra("isNewUser", false);
             startActivity(main);
@@ -86,49 +87,49 @@ public class LoginActivity extends AppCompatActivity {
         if (stayConnected) finish();
     }
 
-    public void register() {
-        SpannableString spannableString = new SpannableString("Don't have an account? Register here!");
+    private void register() {
+        SpannableString spannableString = new SpannableString("Don't have an account?  Register here!");
         ClickableSpan span = new ClickableSpan() {
-            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(@NonNull View view) {
-                setTitle("Register");
+                loginTitle.setText(R.string.app_register);
                 eTName.setVisibility(View.VISIBLE);
-                btn.setText("Register");
+                btn.setText(R.string.app_register);
                 isRegistered = false;
                 login();
             }
         };
-        spannableString.setSpan(span, 0, 39, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(span, 24, 38, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tVLogReg.setText(spannableString);
         tVLogReg.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    public void login() {
-        SpannableString spannableString = new SpannableString("Already have an account? Login here!");
+    private void login() {
+        SpannableString spannableString = new SpannableString("Already have an account?  Login here!");
         ClickableSpan span = new ClickableSpan() {
-            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(@NonNull View view) {
-                setTitle("Login");
+                loginTitle.setText(R.string.app_login);
                 eTName.setVisibility(View.INVISIBLE);
-                btn.setText("login");
+                btn.setText(R.string.app_login);
                 isRegistered = true;
                 register();
             }
         };
-        spannableString.setSpan(span, 0, 39, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(span, 26, 37, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tVLogReg.setText(spannableString);
         tVLogReg.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    public void logOrReg() {
+    public void logOrReg(View view) {
+        String email, password;
         if (isRegistered) {
             email = eTEmail.getText().toString();
             password = eTPass.getText().toString();
 
-            ProgressDialog dialog = ProgressDialog.show(this, "Login", "Please wait...", true);
+            final ProgressDialog dialog = ProgressDialog.show(this, "Login", "Please wait...", true);
             refAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @SuppressLint("ApplySharedPref")
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     dialog.dismiss();
@@ -139,6 +140,11 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d("LoginActivity", "loginEmailPass:success");
                         Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
                         settings = getSharedPreferences("SETTINGS", MODE_PRIVATE);
+                        @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = settings.edit();
+                        editor.putBoolean("stayConnected", rememberUser.isChecked());
+                        editor.commit();
+                        Intent main = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(main);
                     } else {
                         Log.d("LoginActivity", "loginEmailPass:fail");
                         Toast.makeText(LoginActivity.this, "Incorrect e-mail and/or password!", Toast.LENGTH_SHORT).show();
@@ -174,19 +180,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }
             });
-        }
-    }
-
-    @SuppressLint("ApplySharedPref")
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putBoolean("stayConnected", rememberUser.isChecked());
-            editor.commit();
-            Intent main = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(main);
         }
     }
 }

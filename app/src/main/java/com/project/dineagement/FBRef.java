@@ -16,7 +16,7 @@ public class FBRef {
 
     public static String uid;
 
-    public static void getUser(@NonNull FirebaseUser user) {
+    public static void getUser(FirebaseUser user) {
         uid = user.getUid();
         refTasks = FBDB.getReference("tasks").child(uid);
         refCompletedTasks = FBDB.getReference("tasks_done").child(uid);

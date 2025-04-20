@@ -22,7 +22,18 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight=".5" />
+        android:layout_weight="0.75" />
+
+    <TextView
+        android:id="@+id/loginTitle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/app_login"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="48sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/eTName"
@@ -31,7 +42,7 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:ems="10"
-        android:hint="Name..."
+        android:hint="Name…"
         android:inputType="textPersonName"
         android:visibility="invisible"
         tools:ignore="Autofill,HardcodedText" />
@@ -43,9 +54,9 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:ems="10"
-        android:hint="Email..."
+        android:hint="Email…"
         android:inputType="textEmailAddress"
-        tools:ignore="Autofill,HardcodedText" />
+        tools:ignore="Autofill,HardcodedText,TextContrastCheck" />
 
     <EditText
         android:id="@+id/eTPass"
@@ -54,7 +65,7 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:ems="10"
-        android:hint="Password..."
+        android:hint="Password…"
         android:inputType="textPassword"
         tools:ignore="Autofill,HardcodedText" />
 
@@ -83,19 +94,18 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:text="Remember me"
-        tools:ignore="HardcodedText" />
+        android:text="@string/app_remember" />
 
     <Button
         android:id="@+id/btn"
-        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:text="Login"
+        android:onClick="logOrReg"
+        android:text="@string/app_login"
         android:textAllCaps="false"
-        tools:ignore="DuplicateSpeakableTextCheck,HardcodedText" />
+        tools:ignore="DuplicateSpeakableTextCheck" />
 
     <TextView
         android:id="@+id/tVLogReg"

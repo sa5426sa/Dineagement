@@ -26,17 +26,6 @@ public class Task {
         this.createdByUser = createdByUser;
     }
 
-    public Task(int serialNum, String taskName, String taskDesc, String dateCreated, String dateDue, String forUser, String createdByUser) {
-        this.serialNum = serialNum;
-        this.taskName = taskName;
-        this.taskDesc = taskDesc;
-        this.dateCreated = dateCreated;
-        this.dateDue = dateDue;
-        this.forUser = forUser;
-        priority = 0;
-        this.createdByUser = createdByUser;
-    }
-
     public int getSerialNum() {
         return serialNum;
     }

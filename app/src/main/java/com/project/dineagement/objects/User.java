@@ -1,29 +1,21 @@
 package com.project.dineagement.objects;
 
 public class User {
-    private String uid, name, image;
+    private String uid, username, image;
 
     public User() {
     }
 
-    public User(String name, String uid) {
-        this.name = name;
+    public User(String uid, String username) {
         this.uid = uid;
+        this.username = username;
         image = "";
     }
 
-    public User(String uid, String name, String image) {
+    public User(String uid, String username, String image) {
         this.uid = uid;
-        this.name = name;
+        this.username = username;
         this.image = image;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getUid() {
@@ -32,6 +24,14 @@ public class User {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getImage() {
