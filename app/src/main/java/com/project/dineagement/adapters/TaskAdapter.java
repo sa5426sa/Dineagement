@@ -94,7 +94,7 @@ public class TaskAdapter extends BaseAdapter {
     public void setUrgency(TextView textView, int urgent) {
         switch (urgent) {
             case 0: {
-                textView.setTextColor(Color.GRAY);
+                textView.setTextColor(Color.BLACK);
                 textView.setTypeface(null, Typeface.NORMAL);
                 break;
             }

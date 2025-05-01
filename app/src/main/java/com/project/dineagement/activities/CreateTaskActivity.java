@@ -17,6 +17,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -55,6 +56,12 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
 
     private String forUser;
 
+    private int prevSerial;
+
+    private ArrayList<Task> tasks;
+
+    private boolean isFirstTask = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +76,8 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
         spinner = findViewById(R.id.spinner);
         textDueDate = findViewById(R.id.textDueDate);
         btnCreate = findViewById(R.id.btnCreate);
+
+        tasks = new ArrayList<>();
 
         adp = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, usernames);
         spinner.setAdapter(adp);
@@ -86,13 +95,20 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
                 users.clear();
                 usernames.clear();
                 usernames.add("Choose...");
+                tasks.clear();
                 for (DataSnapshot data : snapshot.getChildren()) {
-                    if (data.getValue((User.class)) != user) {
+                    if (data.getValue((User.class)) != user && !data.getValue(User.class).isManager()) {
                         User temp = data.getValue(User.class);
                         String tempName = temp.getUsername();
                         usernames.add(tempName);
                     }
+                    for (DataSnapshot data1 : data.getChildren())
+                        if (data1.getKey().equals(FBRef.uid) && data.getKey().equals("tasks"))
+                            tasks.add(data1.getValue(Task.class));
                 }
+                if (tasks.isEmpty()) isFirstTask = true;
+                else prevSerial = tasks.get(tasks.size() - 1).getSerialNum();
+                adp.notifyDataSetChanged();
             }
 
             @Override
@@ -153,16 +169,21 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
         String taskName = editTaskName.getText().toString();
         String taskDesc = editTaskDesc.getText().toString();
         String dateDue = textDueDate.getText().toString();
-        int priority = 0;
-        if (checkImportant.isChecked()) {
-            if (isUrgent(dateDue, Calendar.getInstance())) priority = 11;
-            else priority = 10;
-        } else if (isUrgent(dateDue, Calendar.getInstance())) priority = 1;
-        Task newTask = new Task(taskName, taskDesc, getCurrentDate(), dateDue, forUser, priority, user.getUsername());
+        int priority;
+        if (checkImportant.isChecked() && isUrgent(dateDue, Calendar.getInstance())) priority = 11;
+        else if (checkImportant.isChecked()) priority = 10;
+        else if (isUrgent(dateDue, Calendar.getInstance())) priority = 1;
+        else priority = 0;
+        Task newTask;
+        if (isFirstTask)
+            newTask = new Task(0, taskName, taskDesc, getCurrentDate(), dateDue, forUser, priority, user.getUsername());
+        else
+            newTask = new Task(prevSerial + 1, taskName, taskDesc, getCurrentDate(), dateDue, forUser, priority, user.getUsername());
         String serialNum = String.valueOf(newTask.getSerialNum());
         refTasks.child(serialNum).setValue(newTask);
 
         Log.i("CreateTaskActivity", "Task created successfully.");
+        Toast.makeText(this, "Task created successfully!", Toast.LENGTH_SHORT).show();
 
         finish();
     }
@@ -173,5 +194,6 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {}
+    public void onNothingSelected(AdapterView<?> parent) {
+    }
 }

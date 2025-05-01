@@ -7,6 +7,7 @@
     <string name="app_login">Login</string>
     <string name="app_remember">Remember me</string>
 
-    <string name="nav_menu_home">Home</string>
-    <string name="nav_menu_settings">Settings</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_credits">Credits</string>
+    <string name="nav_logout">Logout</string>
 </resources>

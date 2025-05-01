@@ -138,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
                         assert user != null;
                         FBRef.getUser(user);
                         Log.d("LoginActivity", "loginEmailPass:success");
-                        Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Logged in successfully.", Toast.LENGTH_SHORT).show();
                         settings = getSharedPreferences("SETTINGS", MODE_PRIVATE);
                         @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = settings.edit();
                         editor.putBoolean("stayConnected", rememberUser.isChecked());
@@ -163,13 +163,12 @@ public class LoginActivity extends AppCompatActivity {
                     dialog.dismiss();
                     if (task.isSuccessful()) {
                         FirebaseUser user = refAuth.getCurrentUser();
-                        assert user != null;
                         FBRef.getUser(user);
                         Log.d("LoginActivity", "createUser:success");
                         uid = user.getUid();
                         userDB = new User(uid, name);
                         refUsers.child(uid).setValue(userDB);
-                        Toast.makeText(LoginActivity.this, "Registered successfully!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Registered successfully.", Toast.LENGTH_SHORT).show();
                     } else {
                         if (task.getException() instanceof FirebaseAuthUserCollisionException)
                             Toast.makeText(LoginActivity.this, "E-mail is already registered! Try logging in instead.", Toast.LENGTH_SHORT).show();

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Task {
-    private int serialNum = -1;
+    private int serialNum;
     private String taskName, taskDesc, dateCreated, dateDue, forUser;
     private int priority; // 0 - not important nor urgent, 1 - not important but urgent, 10 - important but not urgent, 11 - important and urgent
     private String createdByUser;
@@ -15,8 +15,8 @@ public class Task {
     public Task() {
     }
 
-    public Task(String taskName, String taskDesc, String dateCreated, String dateDue, String forUser, int priority, String createdByUser) {
-        serialNum += 1;
+    public Task(int serialNum, String taskName, String taskDesc, String dateCreated, String dateDue, String forUser, int priority, String createdByUser) {
+        this.serialNum = serialNum;
         this.taskName = taskName;
         this.taskDesc = taskDesc;
         this.dateCreated = dateCreated;
