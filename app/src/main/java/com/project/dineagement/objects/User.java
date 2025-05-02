@@ -25,16 +25,17 @@ public class User {
         isManager = false;
     }
 
+    public User(String uid, String username, boolean isManager) {
+        this.uid = uid;
+        this.username = username;
+        image = "";
+        this.isManager = isManager;
+    }
+
     public User(String uid, String username, String image, boolean isManager) {
         this.uid = uid;
         this.username = username;
         this.image = image;
-        this.isManager = isManager;
-    }
-
-    public User(String uid, String username, boolean isManager) {
-        this.uid = uid;
-        this.username = username;
         this.isManager = isManager;
     }
 

@@ -3,11 +3,13 @@ package com.project.dineagement.activities;
 import static com.project.dineagement.FBRef.refAuth;
 import static com.project.dineagement.FBRef.refTasks;
 import static com.project.dineagement.FBRef.refUsers;
+import static com.project.dineagement.FBRef.refImages;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -33,12 +35,14 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.project.dineagement.FBRef;
 import com.project.dineagement.R;
 import com.project.dineagement.adapters.TaskAdapter;
 import com.project.dineagement.objects.Task;
 import com.project.dineagement.objects.User;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -46,10 +50,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private DrawerLayout main;
     private NavigationView mainView;
-    private View headerView;
     private Toolbar toolbar;
-
-    private ListView tasksList;
 
     private ProgressDialog pd;
 
@@ -71,6 +72,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private TextView name, mail;
     private ImageView image;
 
+    DocumentReference refImage;
+    private File imageFile;
+    Bitmap bitmap;
+    private String lastImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +96,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     startActivity(intent);
                 } else if (item.getItemId() == R.id.nav_credits) {
                     intent = new Intent(MainActivity.this, CreditsActivity.class);
+                    startActivity(intent);
+                } else if (item.getItemId() == R.id.nav_settings) {
+                    intent = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivity(intent);
                 } else if (item.getItemId() == R.id.nav_logout) {
                     builder = new AlertDialog.Builder(MainActivity.this);
@@ -133,14 +142,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         main = findViewById(R.id.main);
 
         mainView = findViewById(R.id.main_view);
-        headerView = mainView.getHeaderView(0);
+        View headerView = mainView.getHeaderView(0);
         name = headerView.findViewById(R.id.name);
         mail = headerView.findViewById(R.id.mail);
         image = headerView.findViewById(R.id.image);
 
         toolbar = findViewById(R.id.toolbar);
 
-        tasksList = findViewById(R.id.tasksList);
+        ListView tasksList = findViewById(R.id.tasksList);
 
         noTasks = findViewById(R.id.noTasks);
 
@@ -166,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     name.setText(user.getUsername());
                     mail.setText(refAuth.getCurrentUser().getEmail());
 
-                    if(pd != null) pd.dismiss();
+                    if (pd != null) pd.dismiss();
                 } else Log.e("firebase", "Error getting data: ", task.getException());
             }
         });
@@ -195,7 +204,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         };
         refTasks.addValueEventListener(vel);
     }
@@ -239,5 +249,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    public void readImage(View view) {
+
     }
 }

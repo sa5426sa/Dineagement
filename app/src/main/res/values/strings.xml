@@ -8,6 +8,10 @@
     <string name="app_remember">Remember me</string>
 
     <string name="nav_home">Home</string>
+    <string name="nav_settings">Settings</string>
     <string name="nav_credits">Credits</string>
     <string name="nav_logout">Logout</string>
+
+    <string name="username_placeholder">Name</string>
+    <string name="email_placeholder">Mail</string>
 </resources>
