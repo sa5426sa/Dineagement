@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:text="Current image:"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+ />
 
             <ImageView
                 android:id="@+id/settingsImage"
@@ -85,16 +85,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:text="Current name: "
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                android:text="Current name: " />
 
             <TextView
                 android:id="@+id/settingsName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:text="@string/username_placeholder"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                android:text="@string/username_placeholder" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -124,16 +122,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:text="Current mail: "
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                android:text="Current mail: " />
 
             <TextView
                 android:id="@+id/settingsMail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:text="@string/email_placeholder"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                android:text="@string/email_placeholder" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -168,7 +164,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="256dp"
         android:layout_marginEnd="32dp"
         android:backgroundTint="@color/red"
         android:onClick="deleteAccount"
@@ -177,21 +172,22 @@
         android:textColor="@color/white"
         android:textStyle="bold"
         app:iconTint="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/textView25"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView25"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:text="WARNING: This cannot be undone."
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/red"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button5" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,10 +6,6 @@
         android:id="@+id/nav_home"
         android:icon="@drawable/home"
         android:title="@string/nav_home" />
-    <item
-        android:id="@+id/nav_credits"
-        android:icon="@drawable/baseline_info_24"
-        android:title="@string/nav_credits" />
     <item android:title="">
         <menu>
             <item
@@ -20,6 +16,10 @@
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/baseline_logout_24"
                 android:title="@string/nav_logout" />
+            <item
+                android:id="@+id/nav_credits"
+                android:icon="@drawable/baseline_info_24"
+                android:title="@string/nav_credits" />
         </menu>
     </item>
 </menu>
