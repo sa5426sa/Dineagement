@@ -61,13 +61,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private TaskAdapter taskAdapter;
     private ValueEventListener vel;
 
-    private TextView noTasks, name, mail;
+    private TextView noTasks;
 
     private LinearLayout taskHeader;
 
     private Button addTask;
-
-    private ImageView image;
 
     private final int show = View.VISIBLE, hide = View.INVISIBLE;
 
@@ -146,10 +144,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         taskAdapter = new TaskAdapter(MainActivity.this, tasks);
         tasksList.setAdapter(taskAdapter);
         tasksList.setOnItemClickListener(MainActivity.this);
-
-        image = findViewById(R.id.image);
-        name = findViewById(R.id.name);
-        mail = findViewById(R.id.mail);
 
         pd = ProgressDialog.show(this, "Connecting to Database", "Gathering data...", true);
 
