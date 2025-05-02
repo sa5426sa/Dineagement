@@ -1,5 +1,6 @@
 package com.project.dineagement.activities;
 
+import static com.project.dineagement.FBRef.refAllTasks;
 import static com.project.dineagement.FBRef.refTasks;
 import static com.project.dineagement.FBRef.refUsers;
 import static com.project.dineagement.Utilities.format2Display;
@@ -34,6 +35,7 @@ import com.project.dineagement.objects.Task;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Map;
 
 public class CreateTaskActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -52,15 +54,15 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
 
     private Spinner spinner;
 
-    private ValueEventListener vel;
+    private ValueEventListener vel, vel1;
 
-    private String forUser;
+    private String forUser, forUid;
 
     private int prevSerial;
 
     private ArrayList<Task> tasks;
 
-    private boolean isFirstTask = false;
+    private boolean isFirstTask = false, updater = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,19 +97,14 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
                 users.clear();
                 usernames.clear();
                 usernames.add("Choose...");
-                tasks.clear();
                 for (DataSnapshot data : snapshot.getChildren()) {
                     if (data.getValue((User.class)) != user && !data.getValue(User.class).isManager()) {
                         User temp = data.getValue(User.class);
+                        users.add(temp);
                         String tempName = temp.getUsername();
                         usernames.add(tempName);
                     }
-                    for (DataSnapshot data1 : data.getChildren())
-                        if (data1.getKey().equals(FBRef.uid) && data.getKey().equals("tasks"))
-                            tasks.add(data1.getValue(Task.class));
                 }
-                if (tasks.isEmpty()) isFirstTask = true;
-                else prevSerial = tasks.get(tasks.size() - 1).getSerialNum();
                 adp.notifyDataSetChanged();
             }
 
@@ -116,19 +113,43 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
 
             }
         };
+        vel1 = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                tasks.clear();
+                for (DataSnapshot data : snapshot.getChildren())
+                    if (!data.getKey().equals("updater"))
+                        for (DataSnapshot data1 : data.getChildren())
+                            if (data.getKey().equals(forUid)) tasks.add(data1.getValue(Task.class));
+                if (tasks.isEmpty()) isFirstTask = true;
+                else {
+                    isFirstTask = false;
+                    prevSerial = tasks.get(tasks.size() - 1).getSerialNum();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
         refUsers.addValueEventListener(vel);
+        refAllTasks.child("updater").setValue(updater);
+        refAllTasks.addValueEventListener(vel1);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         refUsers.addValueEventListener(vel);
+        refAllTasks.addValueEventListener(vel1);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         refUsers.removeEventListener(vel);
+        refAllTasks.removeEventListener(vel1);
     }
 
     private String getCurrentDate() {
@@ -180,7 +201,7 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
         else
             newTask = new Task(prevSerial + 1, taskName, taskDesc, getCurrentDate(), dateDue, forUser, priority, user.getUsername());
         String serialNum = String.valueOf(newTask.getSerialNum());
-        refTasks.child(serialNum).setValue(newTask);
+        refAllTasks.child(forUid).child(serialNum).setValue(newTask);
 
         Log.i("CreateTaskActivity", "Task created successfully.");
         Toast.makeText(this, "Task created successfully!", Toast.LENGTH_SHORT).show();
@@ -190,7 +211,12 @@ public class CreateTaskActivity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        if (pos != 0) forUser = usernames.get(pos);
+        if (pos != 0) {
+            forUser = usernames.get(pos);
+            forUid = users.get(pos - 1).getUid();
+            updater = !updater;
+            refAllTasks.child("updater").setValue(updater);
+        }
     }
 
     @Override

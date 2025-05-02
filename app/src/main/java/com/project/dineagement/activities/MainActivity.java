@@ -1,9 +1,9 @@
 package com.project.dineagement.activities;
 
+import static com.project.dineagement.FBRef.refAllTasks;
 import static com.project.dineagement.FBRef.refAuth;
 import static com.project.dineagement.FBRef.refTasks;
 import static com.project.dineagement.FBRef.refUsers;
-import static com.project.dineagement.FBRef.refImages;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private DrawerLayout main;
     private NavigationView mainView;
     private Toolbar toolbar;
-
+    private ListView tasksList;
     private ProgressDialog pd;
 
     private AlertDialog.Builder builder;
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private User user;
     public static ArrayList<Task> tasks;
     private TaskAdapter taskAdapter;
-    private ValueEventListener vel;
+    private ValueEventListener vel, vel1;
 
     private TextView noTasks;
 
@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private File imageFile;
     Bitmap bitmap;
     private String lastImage;
+    private TextView managerHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,13 +150,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         toolbar = findViewById(R.id.toolbar);
 
-        ListView tasksList = findViewById(R.id.tasksList);
+        tasksList = findViewById(R.id.tasksList);
 
         noTasks = findViewById(R.id.noTasks);
 
         taskHeader = findViewById(R.id.taskHeader);
 
         addTask = findViewById(R.id.addTask);
+
+        managerHeader = findViewById(R.id.managerHeader);
+        managerHeader.setVisibility(hide);
 
         tasks = new ArrayList<>();
         taskAdapter = new TaskAdapter(MainActivity.this, tasks);
@@ -169,8 +173,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onComplete(@NonNull com.google.android.gms.tasks.Task<DataSnapshot> task) {
                 if (task.isSuccessful()) {
                     user = task.getResult().getValue(User.class);
-                    if (user.isManager()) addTask.setVisibility(show);
-                    else addTask.setVisibility(hide);
+                    if (user.isManager()) {
+                        taskAdapter.setManager(true);
+                        addTask.setVisibility(show);
+                        noTasks.setText("Press \"Add Task\" to give tasks to your users.");
+                        managerHeader.setVisibility(show);
+                    } else addTask.setVisibility(hide);
 
                     name.setText(user.getUsername());
                     mail.setText(refAuth.getCurrentUser().getEmail());
@@ -184,11 +192,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 tasks.clear();
                 for (DataSnapshot data : snapshot.getChildren())
-                    tasks.add(data.getValue(Task.class));
+                    for (DataSnapshot data1 : data.getChildren()) {
+                        if (managerHeader.getVisibility() == show) tasks.add(data1.getValue(Task.class));
+                        else if (data.getKey().equals(FBRef.uid)) tasks.add(data1.getValue(Task.class));
+                    }
                 if (tasks.isEmpty()) {
                     noTasks.setVisibility(show);
                     taskHeader.setVisibility(hide);
-                    return;
                 } else {
                     noTasks.setVisibility(hide);
                     taskHeader.setVisibility(show);
@@ -200,26 +210,25 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     });
                 }
                 taskAdapter.notifyDataSetChanged();
-                if (pd != null) pd.dismiss();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
         };
-        refTasks.addValueEventListener(vel);
+        refAllTasks.addValueEventListener(vel);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        refTasks.addValueEventListener(vel);
+        refAllTasks.addValueEventListener(vel);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        refTasks.removeEventListener(vel);
+        refAllTasks.removeEventListener(vel);
     }
 
     public void addTask(View view) {

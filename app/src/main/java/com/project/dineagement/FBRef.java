@@ -12,7 +12,7 @@ public class FBRef {
 
     public static FirebaseDatabase database = FirebaseDatabase.getInstance();
     public static DatabaseReference refUsers = database.getReference("users");
-    public static DatabaseReference refTasks, refCompletedTasks, refDeletedTasks;
+    public static DatabaseReference refTasks, refAllTasks = database.getReference("tasks");
 
     public static FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     public static CollectionReference refImages = firestore.collection("images");
@@ -22,7 +22,5 @@ public class FBRef {
     public static void getUser(FirebaseUser user) {
         uid = user.getUid();
         refTasks = database.getReference("tasks").child(uid);
-        refCompletedTasks = database.getReference("tasks_done").child(uid);
-        refDeletedTasks = database.getReference("tasks_bin").child(uid);
     }
 }

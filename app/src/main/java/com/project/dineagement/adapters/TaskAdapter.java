@@ -24,19 +24,25 @@ import java.util.concurrent.TimeUnit;
 public class TaskAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<Task> tasks;
+    private boolean isManager;
     private LayoutInflater inflater;
 
     private final int urgent = 1;
     private final int notUrgent = 0;
+
+    private final int show = View.VISIBLE, hide = View.INVISIBLE;
 
     private Calendar calNow;
 
     public TaskAdapter(Context context, ArrayList<Task> tasks) {
         this.context = context;
         this.tasks = tasks;
+        isManager = false;
         inflater = LayoutInflater.from(context);
         calNow = Calendar.getInstance();
     }
+
+
 
     @Override
     public int getCount() {
@@ -59,18 +65,28 @@ public class TaskAdapter extends BaseAdapter {
         TextView name = view.findViewById(R.id.viewTaskName);
         TextView due = view.findViewById(R.id.viewDueDate);
         TextView importance = view.findViewById(R.id.viewImportance);
+        TextView forUser = view.findViewById(R.id.viewFor);
+        forUser.setVisibility(hide);
         name.setText(tasks.get(pos).getTaskName());
         due.setText(tasks.get(pos).getDateDue());
         if (tasks.get(pos).getPriority() == 10 || tasks.get(pos).getPriority() == 11) importance.setText("Yes");
         else importance.setText("No");
+        if (isManager) {
+            forUser.setVisibility(show);
+            forUser.setText(tasks.get(pos).getForUser());
+        }
         if (isUrgent(tasks.get(pos).getDateDue(), calNow)) {
             setUrgency(name, urgent);
             setUrgency(due, urgent);
             setUrgency(importance, urgent);
+            if (forUser.getVisibility() == show)
+                setUrgency(forUser, urgent);
         } else {
             setUrgency(name, notUrgent);
             setUrgency(due, notUrgent);
             setUrgency(importance, notUrgent);
+            if (forUser.getVisibility() == show)
+                setUrgency(forUser, notUrgent);
         }
         return view;
     }
@@ -104,5 +120,9 @@ public class TaskAdapter extends BaseAdapter {
                 break;
             }
         }
+    }
+
+    public void setManager(boolean manager) {
+        isManager = manager;
     }
 }

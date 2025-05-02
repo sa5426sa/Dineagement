@@ -23,6 +23,13 @@
         android:id="@+id/viewImportance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/viewFor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_weight="1"
         android:text="TextView" />
