@@ -8,8 +8,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -48,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private DrawerLayout main;
     private NavigationView mainView;
+    private View headerView;
     private Toolbar toolbar;
 
     private ListView tasksList;
@@ -68,6 +67,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Button addTask;
 
     private final int show = View.VISIBLE, hide = View.INVISIBLE;
+
+    private TextView name, mail;
+    private ImageView image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +131,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private void initViews() {
         main = findViewById(R.id.main);
+
         mainView = findViewById(R.id.main_view);
+        headerView = mainView.getHeaderView(0);
+        name = headerView.findViewById(R.id.name);
+        mail = headerView.findViewById(R.id.mail);
+        image = headerView.findViewById(R.id.image);
+
         toolbar = findViewById(R.id.toolbar);
 
         tasksList = findViewById(R.id.tasksList);
@@ -154,6 +162,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     user = task.getResult().getValue(User.class);
                     if (user.isManager()) addTask.setVisibility(show);
                     else addTask.setVisibility(hide);
+
+                    name.setText(user.getUsername());
+                    mail.setText(refAuth.getCurrentUser().getEmail());
 
                     if(pd != null) pd.dismiss();
                 } else Log.e("firebase", "Error getting data: ", task.getException());
