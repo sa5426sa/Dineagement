@@ -154,6 +154,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     user = task.getResult().getValue(User.class);
                     if (user.isManager()) addTask.setVisibility(show);
                     else addTask.setVisibility(hide);
+
+                    if(pd != null) pd.dismiss();
                 } else Log.e("firebase", "Error getting data: ", task.getException());
             }
         });
