@@ -10,7 +10,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private User user;
     public static ArrayList<Task> tasks;
     private TaskAdapter taskAdapter;
-    private ValueEventListener vel, vel1;
+    private ValueEventListener vel;
 
     private TextView noTasks;
 
@@ -162,9 +164,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         managerHeader.setVisibility(hide);
 
         tasks = new ArrayList<>();
-        taskAdapter = new TaskAdapter(MainActivity.this, tasks);
-        tasksList.setAdapter(taskAdapter);
-        tasksList.setOnItemClickListener(MainActivity.this);
+        tasksList.setOnItemClickListener(this);
 
         pd = ProgressDialog.show(this, "Connecting to Database", "Gathering data...", true);
 
@@ -174,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (task.isSuccessful()) {
                     user = task.getResult().getValue(User.class);
                     if (user.isManager()) {
-                        taskAdapter.setManager(true);
                         addTask.setVisibility(show);
                         noTasks.setText("Press \"Add Task\" to give tasks to your users.");
                         managerHeader.setVisibility(show);
@@ -183,19 +182,38 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     name.setText(user.getUsername());
                     mail.setText(refAuth.getCurrentUser().getEmail());
 
-                    if (pd != null) pd.dismiss();
+                    if (!task.getResult().getValue(User.class).getImage().isEmpty()) {
+                        byte[] bytes = Base64.decode(task.getResult().getValue(User.class).getImage(), Base64.NO_WRAP);
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        image.setImageBitmap(bitmap);
+                    }
+                    refAllTasks.addValueEventListener(vel);
                 } else Log.e("firebase", "Error getting data: ", task.getException());
             }
         });
         vel = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean updateRequired = false;
+                if (taskAdapter != null) updateRequired = true;
                 tasks.clear();
                 for (DataSnapshot data : snapshot.getChildren())
                     for (DataSnapshot data1 : data.getChildren()) {
-                        if (managerHeader.getVisibility() == show) tasks.add(data1.getValue(Task.class));
-                        else if (data.getKey().equals(FBRef.uid)) tasks.add(data1.getValue(Task.class));
+                        if (managerHeader.getVisibility() == show) {
+                            tasks.add(data1.getValue(Task.class));
+                            if (taskAdapter == null) {
+                                taskAdapter = new TaskAdapter(MainActivity.this, tasks, true);
+                                tasksList.setAdapter(taskAdapter);
+                            }
+                        } else if (data.getKey().equals(FBRef.uid)) {
+                            tasks.add(data1.getValue(Task.class));
+                            if (taskAdapter == null) {
+                                taskAdapter = new TaskAdapter(MainActivity.this, tasks, false);
+                                tasksList.setAdapter(taskAdapter);
+                            }
+                        }
                     }
+                if (updateRequired) taskAdapter.notifyDataSetChanged();
                 if (tasks.isEmpty()) {
                     noTasks.setVisibility(show);
                     taskHeader.setVisibility(hide);
@@ -209,14 +227,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         }
                     });
                 }
-                taskAdapter.notifyDataSetChanged();
+                if (pd != null) pd.dismiss();
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         };
-        refAllTasks.addValueEventListener(vel);
     }
 
     @Override
@@ -241,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         builder = new AlertDialog.Builder(this);
         builder.setTitle("Delete");
         builder.setMessage("Are you sure you want to delete this task? This cannot be undone.");
-        builder.setIcon(R.drawable.baseline_warning_24);
+        builder.setIcon(R.drawable.baseline_delete_24);
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -256,8 +271,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 dialogInterface.cancel();
             }
         });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        builder.show();
     }
 
     public void readImage(View view) {

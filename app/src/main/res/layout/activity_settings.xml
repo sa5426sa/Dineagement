@@ -63,11 +63,11 @@
                 android:layout_weight="1" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/changeImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:onClick="changeImage"
+                android:onClick="onChangeImage"
                 android:text="Change Image" />
 
         </LinearLayout>
@@ -100,11 +100,11 @@
                 android:layout_weight="1" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/changeName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:onClick="changeName"
+                android:onClick="onChangeName"
                 android:text="Change Name" />
 
         </LinearLayout>
@@ -137,11 +137,11 @@
                 android:layout_weight="1" />
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/changeMail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:onClick="changeMail"
+                android:onClick="onChangeMail"
                 android:text="Change Mail" />
 
         </LinearLayout>
@@ -153,7 +153,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:backgroundTint="@color/primary"
-            android:onClick="changePassword"
+            android:onClick="onChangePassword"
             android:text="Change Password"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -166,7 +166,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:backgroundTint="@color/red"
-        android:onClick="deleteAccount"
+        android:onClick="onDeleteAccount"
         android:text="Delete Account"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="@color/white"

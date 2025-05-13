@@ -16,6 +16,7 @@ public class FBRef {
 
     public static FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     public static CollectionReference refImages = firestore.collection("images");
+    public static CollectionReference refGallery = firestore.collection("gallery");
 
     public static String uid;
 

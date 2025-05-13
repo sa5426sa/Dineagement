@@ -34,15 +34,13 @@ public class TaskAdapter extends BaseAdapter {
 
     private Calendar calNow;
 
-    public TaskAdapter(Context context, ArrayList<Task> tasks) {
+    public TaskAdapter(Context context, ArrayList<Task> tasks, boolean isManager) {
         this.context = context;
         this.tasks = tasks;
-        isManager = false;
+        this.isManager = isManager;
         inflater = LayoutInflater.from(context);
         calNow = Calendar.getInstance();
     }
-
-
 
     @Override
     public int getCount() {
