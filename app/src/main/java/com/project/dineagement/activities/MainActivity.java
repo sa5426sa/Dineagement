@@ -195,10 +195,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean updateRequired = taskAdapter != null;
+                boolean manager = managerHeader.getVisibility() == show;
                 tasks.clear();
                 for (DataSnapshot data : snapshot.getChildren())
                     for (DataSnapshot data1 : data.getChildren()) {
-                        if (managerHeader.getVisibility() == show) {
+                        if (manager) {
                             tasks.add(data1.getValue(Task.class));
                             if (taskAdapter == null) {
                                 taskAdapter = new TaskAdapter(MainActivity.this, tasks, true);
@@ -221,8 +222,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     taskHeader.setVisibility(show);
                     tasks.sort(new Comparator<Task>() {
                         @Override
-                        public int compare(Task task1, Task task2) {
-                            return Math.min(task1.getSerialNum(), task2.getSerialNum());
+                        public int compare(Task task, Task t1) {
+                            String s = String.valueOf(task.getPriority());
+                            String s1 = String.valueOf(t1.getPriority());
+                            return -1 * s.compareTo(s1);
+                        }
+                    });
+                    if (manager) tasks.sort(new Comparator<Task>() {
+                        @Override
+                        public int compare(Task task, Task t1) {
+                            int i = Character.getNumericValue(task.getForUser().charAt(0));
+                            int i1 = Character.getNumericValue(t1.getForUser().charAt(0));
+                            return Math.min(i, i1);
                         }
                     });
                 }
