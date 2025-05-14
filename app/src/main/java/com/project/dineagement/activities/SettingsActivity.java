@@ -503,11 +503,66 @@ public class SettingsActivity extends AppCompatActivity implements View.OnCreate
                                 .setPositiveButton("Yes, Delete", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
+                                        AlertDialog.Builder builder2 = new AlertDialog.Builder(SettingsActivity.this)
+                                                .setTitle("Verification")
+                                                .setMessage("Please enter your password to continue.")
+                                                .setIcon(R.drawable.baseline_verify_24);
+
+                                        final EditText input = new EditText(SettingsActivity.this);
+                                        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                                        input.setHint("Password");
+                                        builder2.setView(input);
+
+                                        builder2.setPositiveButton("Verify", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), input.getText().toString());
+                                                user.reauthenticate(credential).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void unused) {
+                                                        ProgressDialog.show(SettingsActivity.this, "Deleting Account...", "Goodbye.", true);
+                                                        refUsers.child(FBRef.uid).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void unused) {
+                                                                user.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void unused) {
+                                                                        Intent i = new Intent(SettingsActivity.this, LoginActivity.class);
+                                                                        startActivity(i);
+                                                                    }
+                                                                }).addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception e) {
+                                                                        Log.e(TAG, "Error deleting user from auth database: ", e);
+                                                                    }
+                                                                });
+                                                            }
+                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Log.e(TAG, "Error deleting user from database: ", e);
+                                                            }
+                                                        });
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(SettingsActivity.this, "Incorrect password.", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                            }
+                                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                dialogInterface.cancel();
+                                            }
+                                        });
+                                        builder2.show();
                                     }
-                                }).setNegativeButton("No,Cancel", new DialogInterface.OnClickListener() {
+                                }).setNegativeButton("No, Cancel", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                                        dialogInterface.cancel();
                                     }
                                 });
                         builder1.show();

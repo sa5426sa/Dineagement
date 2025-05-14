@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         tasks = new ArrayList<>();
         tasksList.setOnItemClickListener(this);
 
-        pd = ProgressDialog.show(this, "Connecting to Database", "Gathering data...", true);
+        pd = ProgressDialog.show(this, "Connecting to Database...", "Gathering data...", true);
 
         refUsers.child(FBRef.uid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -194,8 +194,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         vel = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                boolean updateRequired = false;
-                if (taskAdapter != null) updateRequired = true;
+                boolean updateRequired = taskAdapter != null;
                 tasks.clear();
                 for (DataSnapshot data : snapshot.getChildren())
                     for (DataSnapshot data1 : data.getChildren()) {
