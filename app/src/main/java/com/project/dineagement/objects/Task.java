@@ -89,17 +89,4 @@ public class Task {
     public void setCreatedByUser(String createdByUser) {
         this.createdByUser = createdByUser;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Task)) return false;
-        Task task = (Task) o;
-        return serialNum == task.serialNum && priority == task.priority && Objects.equals(taskName, task.taskName) && Objects.equals(taskDesc, task.taskDesc) && Objects.equals(dateCreated, task.dateCreated) && Objects.equals(dateDue, task.dateDue) && Objects.equals(forUser, task.forUser) && Objects.equals(createdByUser, task.createdByUser);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(serialNum, taskName, taskDesc, dateCreated, dateDue, forUser, priority, createdByUser);
-    }
 }
