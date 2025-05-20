@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.project.dineagement.R;
 import com.project.dineagement.objects.Task;
 
@@ -21,19 +23,30 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Custom adapter for handling task management and display.
+ * @author Shaked Awad
+ * @version 1.0
+ * @since 4/20/2025
+ */
 public class TaskAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<Task> tasks;
     private boolean isManager;
     private LayoutInflater inflater;
 
-    private final int urgent = 1;
-    private final int notUrgent = 0;
+    private final boolean urgent = true, notUrgent = false;
 
     private final int show = View.VISIBLE, hide = View.INVISIBLE;
 
     private Calendar calNow;
 
+    /**
+     * Instantiates a new TaskAdapter.
+     * @param context The context
+     * @param tasks The Task array list
+     * @param isManager Whether the user is a manager
+     */
     public TaskAdapter(Context context, ArrayList<Task> tasks, boolean isManager) {
         this.context = context;
         this.tasks = tasks;
@@ -42,21 +55,42 @@ public class TaskAdapter extends BaseAdapter {
         calNow = Calendar.getInstance();
     }
 
+    /**
+     * Returns the length of an array list of Tasks.
+     * @return count of items in array list
+     */
     @Override
     public int getCount() {
         return tasks.size();
     }
 
+    /**
+     * Returns the value of the Task at a given position.
+     * @param pos The position of the Task
+     * @return The Task object at {@code pos}
+     */
     @Override
-    public Object getItem(int pos) {
+    public Task getItem(int pos) {
         return tasks.get(pos);
     }
 
+    /**
+     * Returns the row ID associated with the specified position in the list.
+     * @param pos The position of the item
+     * @return The ID of the item at the specified position
+     */
     @Override
     public long getItemId(int pos) {
         return pos;
     }
 
+    /**
+     * Defines the cell in which a Task is displayed.
+     * @param pos The position of the Task
+     * @param view The View
+     * @param parent The parent that {@code view} will eventually be attached to
+     * @return {@code view}
+     */
     @Override
     public View getView(int pos, View view, ViewGroup parent) {
         view = inflater.inflate(R.layout.task_layout, parent, false);
@@ -89,7 +123,13 @@ public class TaskAdapter extends BaseAdapter {
         return view;
     }
 
-    public static boolean isUrgent(String endDate, Calendar startDate) {
+    /**
+     * Check if a task's due date is 3 days away or less from the current date.
+     * @param endDate The task's due date
+     * @param startDate The current date
+     * @return {@code true} if the task is urgent, {@code false} otherwise
+     */
+    public static boolean isUrgent(String endDate, @NonNull Calendar startDate) {
         long start = startDate.getTimeInMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date date = null;
@@ -105,22 +145,18 @@ public class TaskAdapter extends BaseAdapter {
         return days <= 3;
     }
 
-    public void setUrgency(TextView textView, int urgent) {
-        switch (urgent) {
-            case 0: {
-                textView.setTextColor(Color.BLACK);
-                textView.setTypeface(null, Typeface.NORMAL);
-                break;
-            }
-            case 1: {
-                textView.setTextColor(Color.RED);
-                textView.setTypeface(null, Typeface.BOLD);
-                break;
-            }
+    /**
+     * Marks the TextView's task in bold red if it's urgent.
+     * @param textView The TextView of the task
+     * @param isUrgent {@code true} if the task is urgent, {@code false} otherwise
+     */
+    public void setUrgency(TextView textView, boolean isUrgent) {
+        if (isUrgent) {
+            textView.setTextColor(Color.RED);
+            textView.setTypeface(null, Typeface.BOLD);
+        } else {
+            textView.setTextColor(Color.BLACK);
+            textView.setTypeface(null, Typeface.NORMAL);
         }
-    }
-
-    public void setManager(boolean manager) {
-        isManager = manager;
     }
 }

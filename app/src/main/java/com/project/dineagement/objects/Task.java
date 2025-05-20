@@ -1,20 +1,34 @@
 package com.project.dineagement.objects;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.Objects;
-
+/**
+ * An {@link Object} representation of a task.
+ * @author Shaked Awad
+ * @version 1.0
+ * @since 3/20/2025
+ */
 public class Task {
     private int serialNum;
     private String taskName, taskDesc, dateCreated, dateDue, forUser;
     private int priority; // 0 - not important nor urgent, 1 - not important but urgent, 10 - important but not urgent, 11 - important and urgent
     private String createdByUser;
 
+    /**
+     * Instantiates a new Task.
+     */
     public Task() {
     }
 
+    /**
+     * Instantiates a new Task.
+     * @param serialNum The serial number
+     * @param taskName The name
+     * @param taskDesc The description
+     * @param dateCreated The creation date
+     * @param dateDue The due date
+     * @param forUser The directed user
+     * @param priority The priority
+     * @param createdByUser The creator
+     */
     public Task(int serialNum, String taskName, String taskDesc, String dateCreated, String dateDue, String forUser, int priority, String createdByUser) {
         this.serialNum = serialNum;
         this.taskName = taskName;
@@ -26,6 +40,7 @@ public class Task {
         this.createdByUser = createdByUser;
     }
 
+    // getters and setters for each value
     public int getSerialNum() {
         return serialNum;
     }

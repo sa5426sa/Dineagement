@@ -1,7 +1,6 @@
 package com.project.dineagement.activities;
 
 import static com.project.dineagement.FBRef.refAllTasks;
-import static com.project.dineagement.FBRef.refTasks;
 import static com.project.dineagement.FBRef.refUsers;
 import static com.project.dineagement.Utilities.format2Display;
 import static com.project.dineagement.adapters.TaskAdapter.isUrgent;

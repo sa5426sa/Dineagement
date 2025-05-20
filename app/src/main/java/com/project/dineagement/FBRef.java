@@ -1,5 +1,7 @@
 package com.project.dineagement;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -20,7 +22,7 @@ public class FBRef {
 
     public static String uid;
 
-    public static void getUser(FirebaseUser user) {
+    public static void getUser(@NonNull FirebaseUser user) {
         uid = user.getUid();
         refTasks = database.getReference("tasks").child(uid);
     }
